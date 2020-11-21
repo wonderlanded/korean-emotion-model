@@ -33,29 +33,36 @@ def term_frequency(doc, pbar):
     return [doc.count(word) for word in words]
 
 print('train Data')
-pbar = tqdm(total=len(train))
-train_x = [term_frequency(d, pbar) for d, _ in train]
+train_np = np.load('train.npz')
+X = train_np['X'].astype('float32')
+Y = train_np['Y'].astype('float32')
+# pbar = tqdm(total=len(train))
+# train_x = [term_frequency(d, pbar) for d, _ in train]
+# train_y = [c for _, c in train]
+# X = np.asarray(train_x).astype('float32')
+# Y = np.asarray(train_y).astype('float32')
+# np.savez('train', X=X, Y=Y)
 
 print('test Data')
-pbar = tqdm(total=len(test))
-test_x = [term_frequency(d, pbar) for d, _ in test]
-train_y = [c for _, c in train]
-test_y = [c for _, c in test]
+test_np = np.load('test.npz')
+testX = test_np['X'].astype('float32')
+testY = test_np['Y'].astype('float32')
 
-X = np.asarray(train_x).astype('float32')
-Y = np.asarray(train_y).astype('float32')
-
-testX = np.asarray(train_x).astype('float32')
-testY = np.asarray(train_y).astype('float32')
+# pbar = tqdm(total=len(test))
+# test_x = [term_frequency(d, pbar) for d, _ in test]
+# test_y = [c for _, c in test]
+# testX = np.asarray(test_x).astype('float32')
+# testY = np.asarray(test_y).astype('float32')
+# np.savez('test', X=testX, Y=testY)
 
 model = models.Sequential()
-model.add(layers.Dense(64, activation='relu', input_layer=(layer, )))
+model.add(layers.Dense(64, activation='relu', input_shape=(layer, )))
 model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
 
-model.compile(optimizers=optimizers.RMSprop(lr=0.001))
+model.compile(optimizer=optimizers.RMSprop(lr=0.001), loss=losses.binary_crossentropy, metrics=[metrics.binary_accuracy])
 
-model.fit(X, Y, epochs=10, batch_size=512, callbacks=[cp_callback])
+model.fit(X, Y, epochs=10, batch_size=256, callbacks=[cp_callback])
 
 results = model.evaluate(testX, testY)
 
