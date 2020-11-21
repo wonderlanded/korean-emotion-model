@@ -140,9 +140,14 @@ cython_debug/
 # ML
 
 checkpoint/
+model/
 
 # dummy
 
 *.json
 *.npz
 *.npy
+
+# ignore file
+
+bot.py
