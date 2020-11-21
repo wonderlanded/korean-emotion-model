@@ -43,7 +43,7 @@ X = np.asarray(train_x).astype('float32')
 Y = np.asarray(train_y).astype('float32')
 np.savez('train', X=X, Y=Y)
 
-# print('test Data')
+print('test Data')
 # test_np = np.load('test.npz')
 # testX = test_np['X'].astype('float32')
 # testY = test_np['Y'].astype('float32')
